@@ -15,10 +15,6 @@ import (
 // baseURL is the Clockify API base URL
 const baseURL = "https://api.clockify.me/api"
 
-type Logger interface {
-	Printf(string, ...interface{})
-}
-
 // Client will help to access Clockify API
 type Client struct {
 	*http.Client
@@ -162,8 +158,8 @@ func (c *Client) LogRange(p LogRangeParam) ([]dto.TimeEntry, error) {
 
 	b := true
 	filter := dto.TimeEntryStartEndRequest{
-		Start:    dto.DateTime{Time: p.FirstDate},
-		End:      dto.DateTime{Time: p.LastDate},
+		Start:    http.DateTime{Time: p.FirstDate},
+		End:      http.DateTime{Time: p.LastDate},
 		Hydrated: &b,
 	}
 
@@ -425,9 +421,9 @@ type CreateTimeEntryParam struct {
 func (c *Client) CreateTimeEntry(p CreateTimeEntryParam) (dto.TimeEntryImpl, error) {
 	var t dto.TimeEntryImpl
 
-	var end *dto.DateTime
+	var end *http.DateTime
 	if p.End != nil {
-		end = &dto.DateTime{Time: *p.End}
+		end = &http.DateTime{Time: *p.End}
 	}
 
 	r, err := c.NewRequest(
@@ -437,7 +433,7 @@ func (c *Client) CreateTimeEntry(p CreateTimeEntryParam) (dto.TimeEntryImpl, err
 			p.Workspace,
 		),
 		dto.CreateTimeEntryRequest{
-			Start:       dto.DateTime{Time: p.Start},
+			Start:       http.DateTime{Time: p.Start},
 			End:         end,
 			Billable:    p.Billable,
 			Description: p.Description,
@@ -553,7 +549,7 @@ func (c *Client) Out(p OutParam) error {
 			p.Workspace,
 		),
 		dto.OutTimeEntryRequest{
-			End: dto.DateTime{Time: p.End},
+			End: http.DateTime{Time: p.End},
 		},
 	)
 
@@ -582,9 +578,9 @@ type UpdateTimeEntryParam struct {
 func (c *Client) UpdateTimeEntry(p UpdateTimeEntryParam) (dto.TimeEntryImpl, error) {
 	var t dto.TimeEntryImpl
 
-	var end *dto.DateTime
+	var end *http.DateTime
 	if p.End != nil {
-		end = &dto.DateTime{Time: *p.End}
+		end = &http.DateTime{Time: *p.End}
 	}
 
 	r, err := c.NewRequest(
@@ -595,7 +591,7 @@ func (c *Client) UpdateTimeEntry(p UpdateTimeEntryParam) (dto.TimeEntryImpl, err
 			p.TimeEntryID,
 		),
 		dto.UpdateTimeEntryRequest{
-			Start:       dto.DateTime{Time: p.Start},
+			Start:       http.DateTime{Time: p.Start},
 			End:         end,
 			Billable:    p.Billable,
 			Description: p.Description,
