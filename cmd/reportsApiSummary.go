@@ -25,8 +25,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-// reportsApiSummaryCmd represents the summary command
-var reportsApiSummaryCmd = &cobra.Command{
+// outputApiSummaryCmd represents the summary command
+var outputApiSummaryCmd = &cobra.Command{
 	Use:   "summary",
 	Short: "A brief description of your command",
 	RunE: withClockifyReportsClient(func(cmd *cobra.Command, args []string, c *reportsapi.ReportsClient) error {
@@ -49,5 +49,5 @@ func summaryJSONPrint(s reportsapi.SummaryReport, w io.Writer) error {
 }
 
 func init() {
-	reportsApiCmd.AddCommand(reportsApiSummaryCmd)
+	outputApiCmd.AddCommand(outputApiSummaryCmd)
 }

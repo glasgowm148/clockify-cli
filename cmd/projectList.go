@@ -20,7 +20,7 @@ import (
 
 	"github.com/lucassabreu/clockify-cli/api"
 	"github.com/lucassabreu/clockify-cli/api/dto"
-	"github.com/lucassabreu/clockify-cli/reports"
+	"github.com/lucassabreu/clockify-cli/output"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -43,13 +43,13 @@ var projectListCmd = &cobra.Command{
 
 		var reportFn func([]dto.Project, io.Writer) error
 
-		reportFn = reports.ProjectPrint
+		reportFn = output.ProjectPrint
 		if format != "" {
-			reportFn = reports.ProjectPrintWithTemplate(format)
+			reportFn = output.ProjectPrintWithTemplate(format)
 		}
 
 		if quiet {
-			reportFn = reports.ProjectPrintQuietly
+			reportFn = output.ProjectPrintQuietly
 		}
 
 		return reportFn(projects, os.Stdout)

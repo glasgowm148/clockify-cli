@@ -19,7 +19,7 @@ import (
 	"os"
 
 	"github.com/lucassabreu/clockify-cli/api/dto"
-	"github.com/lucassabreu/clockify-cli/reports"
+	"github.com/lucassabreu/clockify-cli/output"
 
 	"github.com/lucassabreu/clockify-cli/api"
 	"github.com/spf13/cobra"
@@ -41,13 +41,13 @@ var workspacesCmd = &cobra.Command{
 
 		var reportFn func([]dto.Workspace, io.Writer) error
 
-		reportFn = reports.WorkspacePrint
+		reportFn = output.WorkspacePrint
 		if format != "" {
-			reportFn = reports.WorkspacePrintWithTemplate(format)
+			reportFn = output.WorkspacePrintWithTemplate(format)
 		}
 
 		if quiet {
-			reportFn = reports.WorkspacePrintQuietly
+			reportFn = output.WorkspacePrintQuietly
 		}
 
 		return reportFn(w, os.Stdout)

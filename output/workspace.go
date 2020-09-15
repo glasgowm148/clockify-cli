@@ -1,4 +1,4 @@
-package reports
+package output
 
 import (
 	"fmt"
@@ -9,8 +9,8 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
-// TagPrintQuietly will only print the IDs
-func TagPrintQuietly(ws []dto.Tag, w io.Writer) error {
+// WorkspacePrintQuietly will only print the IDs
+func WorkspacePrintQuietly(ws []dto.Workspace, w io.Writer) error {
 	for _, wk := range ws {
 		fmt.Fprintln(w, wk.ID)
 	}
@@ -18,16 +18,17 @@ func TagPrintQuietly(ws []dto.Tag, w io.Writer) error {
 	return nil
 }
 
-// TagPrint will print more details
-func TagPrint(ws []dto.Tag, w io.Writer) error {
+// WorkspacePrint will print more details
+func WorkspacePrint(ws []dto.Workspace, w io.Writer) error {
 	tw := tablewriter.NewWriter(w)
-	tw.SetHeader([]string{"ID", "Name"})
+	tw.SetHeader([]string{"ID", "Name", "Image"})
 
 	lines := make([][]string, len(ws))
 	for i, w := range ws {
 		lines[i] = []string{
 			w.ID,
 			w.Name,
+			w.ImageURL,
 		}
 	}
 
@@ -37,9 +38,9 @@ func TagPrint(ws []dto.Tag, w io.Writer) error {
 	return nil
 }
 
-// TagPrintWithTemplate will print each worspace using the format string
-func TagPrintWithTemplate(format string) func([]dto.Tag, io.Writer) error {
-	return func(ws []dto.Tag, w io.Writer) error {
+// WorkspacePrintWithTemplate will print each worspace using the format string
+func WorkspacePrintWithTemplate(format string) func([]dto.Workspace, io.Writer) error {
+	return func(ws []dto.Workspace, w io.Writer) error {
 		t, err := template.New("tmpl").Parse(format)
 		if err != nil {
 			return err

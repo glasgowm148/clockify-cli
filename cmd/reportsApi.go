@@ -18,12 +18,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// reportsApiCmd represents the reportsApi command
-var reportsApiCmd = &cobra.Command{
-	Use: "reports-api",
+// outputApiCmd represents the outputApi command
+var outputApiCmd = &cobra.Command{
+	Use: "output-api",
 }
 
 func init() {
-	rootCmd.AddCommand(reportsApiCmd)
+	rootCmd.AddCommand(outputApiCmd)
 
 }

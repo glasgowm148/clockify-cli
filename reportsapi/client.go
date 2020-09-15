@@ -8,7 +8,7 @@ import (
 )
 
 // BaseUrl is the base url for all endpoints for "reporting" on Clockify
-const BaseUrl = "https://reports.api.clockify.me/v1"
+const BaseUrl = "https://output.api.clockify.me/v1"
 
 type ReportsClient struct {
 	*http.Client
@@ -175,7 +175,7 @@ func (c *ReportsClient) Summary(p SummaryParam) (SummaryReport, error) {
 	r, err := c.NewRequest(
 		"POST",
 		fmt.Sprintf(
-			"workspaces/%s/reports/summary",
+			"workspaces/%s/output/summary",
 			p.Workspace,
 		),
 		SummaryRequest{

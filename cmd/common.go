@@ -12,7 +12,7 @@ import (
 
 	"github.com/lucassabreu/clockify-cli/api"
 	"github.com/lucassabreu/clockify-cli/api/dto"
-	"github.com/lucassabreu/clockify-cli/reports"
+	"github.com/lucassabreu/clockify-cli/output"
 	"github.com/lucassabreu/clockify-cli/reportsapi"
 	"github.com/lucassabreu/clockify-cli/ui"
 	stackedErrors "github.com/pkg/errors"
@@ -189,14 +189,14 @@ func printTimeEntryImpl(c *api.Client, tei dto.TimeEntryImpl, asJSON bool, forma
 
 	var reportFn func(*dto.TimeEntry, io.Writer) error
 
-	reportFn = reports.TimeEntryPrint
+	reportFn = output.TimeEntryPrint
 
 	if asJSON {
-		reportFn = reports.TimeEntryJSONPrint
+		reportFn = output.TimeEntryJSONPrint
 	}
 
 	if format != "" {
-		reportFn = reports.TimeEntryPrintWithTemplate(format)
+		reportFn = output.TimeEntryPrintWithTemplate(format)
 	}
 
 	return reportFn(&fte, os.Stdout)
