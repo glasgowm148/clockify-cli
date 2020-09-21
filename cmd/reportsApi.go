@@ -20,7 +20,7 @@ import (
 
 // reportsApiCmd represents the reportsApi command
 var reportsApiCmd = &cobra.Command{
-	Use: "output-api",
+	Use: "reports-api",
 }
 
 func init() {

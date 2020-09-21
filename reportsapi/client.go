@@ -1,6 +1,7 @@
 package reportsapi
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -8,7 +9,7 @@ import (
 )
 
 // BaseUrl is the base url for all endpoints for "reporting" on Clockify
-const BaseUrl = "https://output.api.clockify.me/v1"
+const BaseUrl = "https://reports.api.clockify.me/v1"
 
 type ReportsClient struct {
 	*http.Client
@@ -157,20 +158,40 @@ type SortAndAggregateParam struct {
 }
 
 type group string
+type GroupSlice []group
 
 const (
-	Project   group = "PROJECT"
-	Client    group = "CLIENT"
-	Task      group = "TASK"
-	Tag       group = "TAG"
-	Date      group = "DATE"
-	User      group = "USER"
-	UserGroup group = "USER_GROUP"
-	TimeEntry group = "TIMEENTRY"
+	Project   group = "project"
+	Client    group = "client"
+	Task      group = "task"
+	Tag       group = "tag"
+	Date      group = "date"
+	User      group = "user"
+	UserGroup group = "userGroup"
+	TimeEntry group = "timeEntry"
 )
 
-func Groups(g ...group) []group {
-	return g
+func (g group) ToRequestFilterGroup() FilterGroup {
+	switch g {
+	case Project:
+		return FilterGroupProject
+	case Client:
+		return FilterGroupClient
+	case Task:
+		return FilterGroupTask
+	case Tag:
+		return FilterGroupTag
+	case Date:
+		return FilterGroupDate
+	case User:
+		return FilterGroupUser
+	case UserGroup:
+		return FilterGroupUserGroup
+	case TimeEntry:
+		return FilterGroupTimeEntry
+	default:
+		return FilterGroupProject
+	}
 }
 
 type SummaryParam struct {
@@ -191,10 +212,19 @@ func fill(filler ...interface{ Fill(BaseRequest) BaseRequest }) BaseRequest {
 func (c *ReportsClient) Summary(p SummaryParam) (SummaryReport, error) {
 	var s SummaryReport
 
+	if len(p.Groups) == 0 {
+		return s, errors.New("at least one group must be informed")
+	}
+
+	rgs := make([]FilterGroup, len(p.Groups))
+	for i, g := range p.Groups {
+		rgs[i] = g.ToRequestFilterGroup()
+	}
+
 	r, err := c.NewRequest(
 		"POST",
 		fmt.Sprintf(
-			"workspaces/%s/output/summary",
+			"workspaces/%s/reports/summary",
 			p.Workspace,
 		),
 		SummaryRequest{
@@ -203,7 +233,7 @@ func (c *ReportsClient) Summary(p SummaryParam) (SummaryReport, error) {
 				p.EntitiesParam,
 			),
 			SummaryFilter: SummaryFilter{
-				Groups: []FilterGroup{FilterGroupClient, FilterGroupProject},
+				Groups: rgs,
 			},
 		},
 	)
