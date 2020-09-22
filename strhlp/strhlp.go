@@ -24,3 +24,11 @@ func Normalize(s string) string {
 	}
 	return r
 }
+
+func Merge(ss ...[]string) []string {
+	s := make([]string, 0)
+	for i := range ss {
+		s = append(s, ss[i]...)
+	}
+	return s
+}
